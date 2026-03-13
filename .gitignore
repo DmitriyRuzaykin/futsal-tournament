@@ -16,8 +16,6 @@ __pycache__/
 # Кэш Streamlit
 .streamlit/
 
-# Данные (если не хотите хранить в репозитории)
-data/tournament.json
 *.db
 
 # IDE

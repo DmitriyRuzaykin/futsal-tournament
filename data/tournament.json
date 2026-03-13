@@ -1,0 +1,286 @@
+{
+  "tournament": {
+    "name": "Кубок Elita по футзалу",
+    "season": "2026",
+    "stage": "Групповой этап",
+    "location": "Волжский муниципальный район"
+  },
+  "groups": {
+    "A": ["Приволжский 1", "Ярамор", "Параты", "Приволжский 2", "Сотнур"],
+    "B": ["Помары", "Карамассы", "Петъял", "Эмеково", "Часовенная"]
+  },
+  "matches": [
+    {
+      "id": 1,
+      "group": "A",
+      "tour": 1,
+      "date": "2025-03-14",
+      "time": "16:00",
+      "team1": "Карамассы",
+      "team2": "Часовенная",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 2,
+      "group": "B",
+      "tour": 1,
+      "date": "2025-03-14",
+      "time": "17:00",
+      "team1": "Ярамор",
+      "team2": "Сотнур",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 3,
+      "group": "A",
+      "tour": 1,
+      "date": "2025-03-14",
+      "time": "18:00",
+      "team1": "Параты",
+      "team2": "Приволжский 2",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 4,
+      "group": "B",
+      "tour": 1,
+      "date": "2025-03-14",
+      "time": "19:00",
+      "team1": "Петъял",
+      "team2": "Эмеково",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 5,
+      "group": "B",
+      "tour": 2,
+      "date": "2025-03-15",
+      "time": "16:00",
+      "team1": "Часовенная",
+      "team2": "Петъял",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 6,
+      "group": "A",
+      "tour": 2,
+      "date": "2025-03-15",
+      "time": "17:00",
+      "team1": "Сотнур",
+      "team2": "Параты",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 7,
+      "group": "B",
+      "tour": 2,
+      "date": "2025-03-15",
+      "time": "18:00",
+      "team1": "Помары",
+      "team2": "Карамассы",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 8,
+      "group": "A",
+      "tour": 2,
+      "date": "2025-03-15",
+      "time": "19:00",
+      "team1": "Приволжский 1",
+      "team2": "Ярамор",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 9,
+      "group": "A",
+      "tour": 3,
+      "date": "2025-03-21",
+      "time": "16:00",
+      "team1": "Параты",
+      "team2": "Приволжский 1",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 10,
+      "group": "B",
+      "tour": 3,
+      "date": "2025-03-21",
+      "time": "17:00",
+      "team1": "Петъял",
+      "team2": "Помары",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 11,
+      "group": "A",
+      "tour": 3,
+      "date": "2025-03-21",
+      "time": "18:00",
+      "team1": "Приволжский 2",
+      "team2": "Сотнур",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 12,
+      "group": "B",
+      "tour": 3,
+      "date": "2025-03-21",
+      "time": "19:00",
+      "team1": "Эмеково",
+      "team2": "Часовенная",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 13,
+      "group": "B",
+      "tour": 4,
+      "date": "2025-03-22",
+      "time": "16:00",
+      "team1": "Помары",
+      "team2": "Эмеково",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 14,
+      "group": "A",
+      "tour": 4,
+      "date": "2025-03-22",
+      "time": "17:00",
+      "team1": "Приволжский 1",
+      "team2": "Приволжский 2",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 15,
+      "group": "B",
+      "tour": 4,
+      "date": "2025-03-22",
+      "time": "18:00",
+      "team1": "Карамассы",
+      "team2": "Петъял",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 16,
+      "group": "A",
+      "tour": 4,
+      "date": "2025-03-22",
+      "time": "19:00",
+      "team1": "Ярамор",
+      "team2": "Параты",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 17,
+      "group": "A",
+      "tour": 5,
+      "date": "2025-03-28",
+      "time": "16:00",
+      "team1": "Приволжский 2",
+      "team2": "Ярамор",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 18,
+      "group": "B",
+      "tour": 5,
+      "date": "2025-03-28",
+      "time": "17:00",
+      "team1": "Эмеково",
+      "team2": "Карамассы",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 19,
+      "group": "A",
+      "tour": 5,
+      "date": "2025-03-28",
+      "time": "18:00",
+      "team1": "Сотнур",
+      "team2": "Приволжский 1",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    },
+    {
+      "id": 20,
+      "group": "B",
+      "tour": 5,
+      "date": "2025-03-28",
+      "time": "19:00",
+      "team1": "Часовенная",
+      "team2": "Помары",
+      "score1": null,
+      "score2": null,
+      "status": "scheduled"
+    }
+  ],
+  "teams": {
+    "Приволжский 1": {
+      "players": []
+    },
+    "Ярамор": {
+      "players": []
+    },
+    "Параты": {
+      "players": []
+    },
+    "Приволжский 2": {
+      "players": []
+    },
+    "Сотнур": {
+      "players": []
+    },
+    "Помары": {
+      "players": []
+    },
+    "Карамассы": {
+      "players": []
+    },
+    "Петъял": {
+      "players": []
+    },
+    "Эмеково": {
+      "players": []
+    },
+    "Часовенная": {
+      "players": []
+    }
+  }
+}
