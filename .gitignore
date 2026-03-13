@@ -1,0 +1,27 @@
+# Виртуальное окружение
+venv/
+env/
+ENV/
+
+# Файлы с секретами
+.env
+.streamlit/secrets.toml
+*.secrets.toml
+
+# Кэш Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Кэш Streamlit
+.streamlit/
+
+# Данные (если не хотите хранить в репозитории)
+data/tournament.json
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
