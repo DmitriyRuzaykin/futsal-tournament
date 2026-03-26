@@ -338,23 +338,29 @@ def load_tournament_data():
         st.error(f"Ошибка при загрузке: {e}")
         return None
 
-# Функция для расчета турнирной таблицы
+# Функция для расчета турнирной таблицы с учетом личных встреч
 def calculate_standings(matches, group_teams):
-    """Рассчитывает турнирную таблицу для группы"""
+    """Рассчитывает турнирную таблицу для группы с учетом личных встреч"""
     
+    # Создаем словарь для статистики команд
     standings = {}
     for team in group_teams:
         standings[team] = {
             'Команда': team,
-            'И': 0,
-            'В': 0,
-            'Н': 0,
-            'П': 0,
-            'ЗМ': 0,
-            'ПМ': 0,
-            'О': 0
+            'И': 0,  # Игры
+            'В': 0,  # Победы
+            'Н': 0,  # Ничьи
+            'П': 0,  # Поражения
+            'ЗМ': 0,  # Забито
+            'ПМ': 0,  # Пропущено
+            'О': 0   # Очки
         }
     
+    # Словарь для хранения результатов личных встреч
+    # Формат: head_to_head[(team1, team2)] = {'points': points_team1, 'gd': goal_diff_team1}
+    head_to_head = {}
+    
+    # Обрабатываем каждый матч
     for match in matches:
         if match['status'] == 'completed' and match['score1'] is not None and match['score2'] is not None:
             team1 = match['team1']
@@ -365,6 +371,7 @@ def calculate_standings(matches, group_teams):
             if team1 not in standings or team2 not in standings:
                 continue
             
+            # Обновляем общую статистику
             standings[team1]['И'] += 1
             standings[team1]['ЗМ'] += score1
             standings[team1]['ПМ'] += score2
@@ -373,24 +380,92 @@ def calculate_standings(matches, group_teams):
             standings[team2]['ЗМ'] += score2
             standings[team2]['ПМ'] += score1
             
+            # Определяем результат
             if score1 > score2:
                 standings[team1]['В'] += 1
                 standings[team1]['О'] += 3
                 standings[team2]['П'] += 1
+                # Для личной встречи
+                head_to_head[(team1, team2)] = {'points': 3, 'gd': score1 - score2}
+                head_to_head[(team2, team1)] = {'points': 0, 'gd': score2 - score1}
             elif score1 < score2:
                 standings[team2]['В'] += 1
                 standings[team2]['О'] += 3
                 standings[team1]['П'] += 1
+                # Для личной встречи
+                head_to_head[(team1, team2)] = {'points': 0, 'gd': score1 - score2}
+                head_to_head[(team2, team1)] = {'points': 3, 'gd': score2 - score1}
             else:
                 standings[team1]['Н'] += 1
                 standings[team1]['О'] += 1
                 standings[team2]['Н'] += 1
                 standings[team2]['О'] += 1
+                # Для личной встречи
+                head_to_head[(team1, team2)] = {'points': 1, 'gd': 0}
+                head_to_head[(team2, team1)] = {'points': 1, 'gd': 0}
     
+    # Преобразуем в DataFrame
     df = pd.DataFrame(list(standings.values()))
+    
     if not df.empty:
         df['+/-'] = df['ЗМ'] - df['ПМ']
-        df = df.sort_values(['О', '+/-', 'ЗМ'], ascending=False).reset_index(drop=True)
+        
+        # Функция для сравнения команд при равенстве очков
+        def compare_teams(team1, team2):
+            """Сравнивает две команды по очкам, личным встречам, разнице мячей"""
+            # Получаем очки
+            points1 = df.loc[df['Команда'] == team1, 'О'].values[0]
+            points2 = df.loc[df['Команда'] == team2, 'О'].values[0]
+            
+            if points1 != points2:
+                return points1 > points2
+            
+            # Если очки равны, проверяем личную встречу
+            if (team1, team2) in head_to_head:
+                h2h_points1 = head_to_head[(team1, team2)]['points']
+                h2h_points2 = head_to_head[(team2, team1)]['points']
+                
+                if h2h_points1 != h2h_points2:
+                    return h2h_points1 > h2h_points2
+                
+                # Если очки в личных встречах равны, проверяем разницу мячей
+                h2h_gd1 = head_to_head[(team1, team2)]['gd']
+                h2h_gd2 = head_to_head[(team2, team1)]['gd']
+                
+                if h2h_gd1 != h2h_gd2:
+                    return h2h_gd1 > h2h_gd2
+            
+            # Если личная встреча не игралась или ничья, сравниваем общую разницу мячей
+            gd1 = df.loc[df['Команда'] == team1, '+/-'].values[0]
+            gd2 = df.loc[df['Команда'] == team2, '+/-'].values[0]
+            
+            if gd1 != gd2:
+                return gd1 > gd2
+            
+            # Если все равны, сравниваем забитые мячи
+            goals1 = df.loc[df['Команда'] == team1, 'ЗМ'].values[0]
+            goals2 = df.loc[df['Команда'] == team2, 'ЗМ'].values[0]
+            
+            return goals1 > goals2
+        
+        # Сортируем команды
+        teams = df['Команда'].tolist()
+        
+        # Пузырьковая сортировка с использованием нашего компаратора
+        n = len(teams)
+        for i in range(n):
+            for j in range(0, n - i - 1):
+                if not compare_teams(teams[j], teams[j + 1]):
+                    teams[j], teams[j + 1] = teams[j + 1], teams[j]
+        
+        # Создаем отсортированный DataFrame
+        sorted_teams = []
+        for team in teams:
+            sorted_teams.append(standings[team])
+        
+        df = pd.DataFrame(sorted_teams)
+        df['+/-'] = df['ЗМ'] - df['ПМ']
+        df = df.reset_index(drop=True)
     
     return df
 
@@ -398,7 +473,7 @@ def calculate_standings(matches, group_teams):
 data = load_tournament_data()
 
 if data:
-    # Создаем вкладки (только просмотр, без администрирования)
+    # Создаем вкладки
     tab1, tab2 = st.tabs([
         "📊 Турнирная таблица", 
         "⚔️ Матчи"
