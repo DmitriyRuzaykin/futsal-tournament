@@ -4,70 +4,357 @@ import json
 from datetime import datetime
 import plotly.express as px
 import os
-from dotenv import load_dotenv
-
-# Загружаем переменные окружения
-load_dotenv()
 
 # Настройка страницы
 st.set_page_config(
     page_title="Кубок Elita по футзалу",
     page_icon="⚽",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="auto"
 )
+
+st.markdown("""
+<style>
+    /* Общие стили для карточек матчей */
+    .match-card {
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        margin: 10px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-left: 5px solid #2e7d32;
+    }
+    
+    .match-card.scheduled {
+        border-left-color: #ed6c02;
+    }
+    
+    .match-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: #666;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .match-teams {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    .team-name {
+        flex: 2;
+        font-size: 16px;
+    }
+    
+    .team-name.left {
+        text-align: right;
+        padding-right: 10px;
+    }
+    
+    .team-name.right {
+        text-align: left;
+        padding-left: 10px;
+    }
+    
+    .match-score {
+        flex: 1;
+        font-size: 24px;
+        font-weight: bold;
+        background: white;
+        padding: 5px 15px;
+        border-radius: 25px;
+        margin: 0 5px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .match-status {
+        text-align: center;
+        margin-top: 12px;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 6px 20px;
+        border-radius: 25px;
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    
+    .status-badge.completed {
+        background-color: #2e7d32;
+    }
+    
+    .status-badge.scheduled {
+        background-color: #ed6c02;
+    }
+    
+    .match-info {
+        text-align: center;
+        margin-top: 8px;
+        font-size: 12px;
+        color: #666;
+    }
+    
+    /* Адаптация для мобильных */
+    @media (max-width: 768px) {
+        .team-name {
+            font-size: 14px;
+        }
+        
+        .match-score {
+            font-size: 18px;
+            padding: 4px 10px;
+        }
+        
+        .match-header {
+            font-size: 12px;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+# АДАПТИВНЫЙ ДИЗАЙН ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
+st.markdown("""
+<style>
+    /* Мета-теги для мобильных устройств */
+    meta[name="viewport"] {
+        content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes";
+    }
+    
+    /* Общие стили для мобильных устройств */
+    @media (max-width: 768px) {
+        /* Уменьшаем отступы */
+        .block-container {
+            padding: 1rem 0.5rem !important;
+        }
+        
+        /* Улучшаем читаемость таблицы */
+        .dataframe {
+            font-size: 12px !important;
+        }
+        
+        .dataframe td, .dataframe th {
+            padding: 4px 2px !important;
+            white-space: nowrap;
+        }
+        
+        /* Делаем кнопки больше для удобного нажатия */
+        .stButton button {
+            min-height: 44px;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        /* Улучшаем отображение метрик */
+        .stMetric {
+            background-color: #f0f2f6;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+        }
+        
+        /* Адаптация для радио-кнопок */
+        .stRadio {
+            margin-bottom: 15px;
+        }
+        
+        .stRadio div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .stRadio label {
+            flex: 1 1 auto;
+            text-align: center;
+            background-color: #f0f2f6;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 0 !important;
+        }
+        
+        /* Адаптация для selectbox */
+        .stSelectbox {
+            margin-bottom: 15px;
+        }
+        
+        /* Скрываем лишние колонки в таблице на мобильных */
+        .dataframe th:nth-child(4),
+        .dataframe td:nth-child(4),
+        .dataframe th:nth-child(5),
+        .dataframe td:nth-child(5),
+        .dataframe th:nth-child(6),
+        .dataframe td:nth-child(6) {
+            display: none;
+        }
+    }
+    
+    /* Стили для карточек матчей */
+    .match-card {
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        margin: 10px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-left: 5px solid #2e7d32;
+    }
+    
+    .match-card.scheduled {
+        border-left-color: #ed6c02;
+    }
+    
+    .match-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: #666;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .match-teams {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    .team-name {
+        flex: 2;
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .team-name.left {
+        text-align: right;
+        padding-right: 10px;
+    }
+    
+    .team-name.right {
+        text-align: left;
+        padding-left: 10px;
+    }
+    
+    .match-score {
+        flex: 1;
+        font-size: 24px;
+        font-weight: bold;
+        background: white;
+        padding: 5px 15px;
+        border-radius: 25px;
+        margin: 0 5px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .match-status {
+        text-align: center;
+        margin-top: 12px;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 6px 20px;
+        border-radius: 25px;
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    
+    .status-badge.completed {
+        background-color: #2e7d32;
+    }
+    
+    .status-badge.scheduled {
+        background-color: #ed6c02;
+    }
+    
+    .match-info {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        font-size: 13px;
+        color: #666;
+        margin-top: 8px;
+    }
+    
+    /* Адаптация для сайдбара на мобильных */
+    @media (max-width: 768px) {
+        section[data-testid="stSidebar"] {
+            min-width: 80% !important;
+            width: 80% !important;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # Заголовок
 st.title("🏆 Кубок Elita по футзалу")
 st.subheader("Волжский муниципальный район")
 st.markdown("---")
 
-# Функция загрузки данных из JSON
-@st.cache_data
+# Функция загрузки данных из локального JSON файла
+@st.cache_data(ttl=60)  # Кэшируем на 1 минуту, чтобы видеть изменения быстрее
 def load_tournament_data():
-    """Загружает данные турнира из JSON файла"""
+    """Загружает данные турнира из локального файла data/tournament.json"""
     try:
-        with open('data/tournament.json', 'r', encoding='utf-8') as file:
+        file_path = 'data/tournament.json'
+        
+        # Проверяем существование файла
+        if not os.path.exists(file_path):
+            st.error(f"Файл {file_path} не найден!")
+            return None
+        
+        with open(file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
+        
+        # Показываем информацию о загрузке
+        completed = sum(1 for m in data['matches'] if m['status'] == 'completed')
+        st.sidebar.success(f"✅ Данные загружены из файла")
+        st.sidebar.write(f"📊 Сыграно матчей: {completed}")
+        st.sidebar.write(f"🕐 Обновлено: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}")
+        
         return data
     except FileNotFoundError:
         st.error("Файл data/tournament.json не найден!")
         return None
-    except json.JSONDecodeError:
-        st.error("Ошибка в формате JSON файла!")
+    except json.JSONDecodeError as e:
+        st.error(f"Ошибка в формате JSON файла: {e}")
         return None
-
-# Функция сохранения данных в JSON
-def save_tournament_data(data):
-    """Сохраняет данные турнира в JSON файл"""
-    try:
-        with open('data/tournament.json', 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=2)
-        # Очищаем кэш после сохранения
-        st.cache_data.clear()
-        return True
     except Exception as e:
-        st.error(f"Ошибка при сохранении: {e}")
-        return False
+        st.error(f"Ошибка при загрузке: {e}")
+        return None
 
 # Функция для расчета турнирной таблицы
 def calculate_standings(matches, group_teams):
     """Рассчитывает турнирную таблицу для группы"""
     
-    # Создаем словарь для статистики команд
     standings = {}
     for team in group_teams:
         standings[team] = {
             'Команда': team,
-            'И': 0,  # Игры
-            'В': 0,  # Победы
-            'Н': 0,  # Ничьи
-            'П': 0,  # Поражения
-            'ЗМ': 0,  # Забито
-            'ПМ': 0,  # Пропущено
-            'О': 0   # Очки
+            'И': 0,
+            'В': 0,
+            'Н': 0,
+            'П': 0,
+            'ЗМ': 0,
+            'ПМ': 0,
+            'О': 0
         }
     
-    # Обрабатываем каждый матч
     for match in matches:
         if match['status'] == 'completed' and match['score1'] is not None and match['score2'] is not None:
             team1 = match['team1']
@@ -75,17 +362,17 @@ def calculate_standings(matches, group_teams):
             score1 = match['score1']
             score2 = match['score2']
             
-            # Обновляем статистику для команды 1
+            if team1 not in standings or team2 not in standings:
+                continue
+            
             standings[team1]['И'] += 1
             standings[team1]['ЗМ'] += score1
             standings[team1]['ПМ'] += score2
             
-            # Обновляем статистику для команды 2
             standings[team2]['И'] += 1
             standings[team2]['ЗМ'] += score2
             standings[team2]['ПМ'] += score1
             
-            # Определяем результат
             if score1 > score2:
                 standings[team1]['В'] += 1
                 standings[team1]['О'] += 3
@@ -100,82 +387,27 @@ def calculate_standings(matches, group_teams):
                 standings[team2]['Н'] += 1
                 standings[team2]['О'] += 1
     
-    # Преобразуем в DataFrame и сортируем по очкам
     df = pd.DataFrame(list(standings.values()))
-    df['+/-'] = df['ЗМ'] - df['ПМ']
-    df = df.sort_values(['О', '+/-', 'ЗМ'], ascending=False).reset_index(drop=True)
+    if not df.empty:
+        df['+/-'] = df['ЗМ'] - df['ПМ']
+        df = df.sort_values(['О', '+/-', 'ЗМ'], ascending=False).reset_index(drop=True)
     
     return df
-
-# Функция для проверки пароля (безопасная версия)
-def check_password():
-    """Возвращает True если пароль введен правильно"""
-    
-    def get_admin_password():
-        """Получает пароль из разных источников"""
-        # Пробуем из Streamlit secrets
-        try:
-            if "admin_password" in st.secrets:
-                return st.secrets["admin_password"]
-        except:
-            pass
-        
-        # Пробуем из переменных окружения
-        env_password = os.getenv("ADMIN_PASSWORD")
-        if env_password:
-            return env_password
-        
-        # Если ничего нет, показываем ошибку
-        st.error("Пароль администратора не настроен! Добавьте его в .env или .streamlit/secrets.toml")
-        return None
-    
-    def password_entered():
-        correct_password = get_admin_password()
-        
-        if correct_password is None:
-            st.session_state["password_correct"] = False
-        elif st.session_state["password"] == correct_password:
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
-    
-    if "password_correct" not in st.session_state:
-        st.text_input(
-            "Введите пароль администратора:", 
-            type="password", 
-            on_change=password_entered, 
-            key="password"
-        )
-        return False
-    elif not st.session_state["password_correct"]:
-        st.text_input(
-            "Введите пароль администратора:", 
-            type="password", 
-            on_change=password_entered, 
-            key="password"
-        )
-        st.error("😕 Неверный пароль")
-        return False
-    else:
-        return True
 
 # Загружаем данные
 data = load_tournament_data()
 
 if data:
-    # Создаем вкладки
-    tab1, tab2, tab3 = st.tabs([
+    # Создаем вкладки (только просмотр, без администрирования)
+    tab1, tab2 = st.tabs([
         "📊 Турнирная таблица", 
-        "⚔️ Матчи",
-        "🔧 Администрирование"
+        "⚔️ Матчи"
     ])
     
     # Вкладка 1: Турнирная таблица
     with tab1:
         st.header("Турнирная таблица - Групповой этап")
         
-        # Выбор группы
         group_choice = st.radio(
             "Выберите группу:",
             ["Группа A", "Группа B"],
@@ -186,25 +418,12 @@ if data:
             group_teams = data['groups']['A']
             group_matches = [m for m in data['matches'] if m['group'] == 'A']
             df_standings = calculate_standings(group_matches, group_teams)
-            
-            df_standings.insert(0, 'Место', range(1, len(df_standings) + 1))
-            
-            def highlight_top(row):
-                if row.name == 0:
-                    return ['background-color: #90EE90'] * len(row)
-                elif row.name == len(df_standings) - 1:
-                    return ['background-color: #FFB6C1'] * len(row)
-                else:
-                    return [''] * len(row)
-            
-            styled_df = df_standings.style.apply(highlight_top, axis=1)
-            st.dataframe(styled_df, use_container_width=True, hide_index=True)
-            
         else:
             group_teams = data['groups']['B']
             group_matches = [m for m in data['matches'] if m['group'] == 'B']
             df_standings = calculate_standings(group_matches, group_teams)
-            
+        
+        if not df_standings.empty:
             df_standings.insert(0, 'Место', range(1, len(df_standings) + 1))
             
             def highlight_top(row):
@@ -217,8 +436,10 @@ if data:
             
             styled_df = df_standings.style.apply(highlight_top, axis=1)
             st.dataframe(styled_df, use_container_width=True, hide_index=True)
+        else:
+            st.info("Нет данных для отображения")
     
-    # Вкладка 2: Матчи
+    # Вкладка 2: Матчи (исправленная версия)
     with tab2:
         st.header("Расписание матчей - Групповой этап")
         
@@ -261,7 +482,7 @@ if data:
         # Сортируем по дате и туру
         filtered_matches.sort(key=lambda x: (x['date'], x['time']))
         
-        # Отображаем матчи
+        # Отображаем матчи в виде карточек
         if filtered_matches:
             current_tour = None
             for match in filtered_matches:
@@ -269,148 +490,68 @@ if data:
                     current_tour = match['tour']
                     st.subheader(f"⚔️ {current_tour} тур")
                 
+                # Определяем цвета в зависимости от статуса
+                if match['status'] == 'completed':
+                    bg_color = "#e8f5e9"
+                    border_color = "#2e7d32"
+                    status_text = "✅ Завершен"
+                    status_bg = "#2e7d32"
+                else:
+                    bg_color = "#fff3e0"
+                    border_color = "#ed6c02"
+                    status_text = "⏳ Предстоит"
+                    status_bg = "#ed6c02"
+                
+                # Форматируем дату
+                date_obj = datetime.strptime(match['date'], '%Y-%m-%d')
+                formatted_date = date_obj.strftime('%d.%m.%Y')
+                
+                # Отображаем счет
+                if match['score1'] is not None and match['score2'] is not None:
+                    score_display = f"{match['score1']} : {match['score2']}"
+                else:
+                    score_display = "? : ?"
+                
+                # Используем columns для создания карточки (более надежно, чем HTML)
                 with st.container():
-                    cols = st.columns([2, 1, 1, 2, 2, 1])
-                    
-                    with cols[0]:
-                        st.write(f"**{match['team1']}**")
-                    
-                    with cols[1]:
-                        if match['status'] == 'completed' and match['score1'] is not None:
-                            st.write(f"**{match['score1']}**")
-                        else:
-                            st.write("**-**")
-                    
-                    with cols[2]:
-                        if match['status'] == 'completed' and match['score2'] is not None:
-                            st.write(f"**{match['score2']}**")
-                        else:
-                            st.write("**-**")
-                    
-                    with cols[3]:
-                        st.write(f"**{match['team2']}**")
-                    
-                    with cols[4]:
-                        date_obj = datetime.strptime(match['date'], '%Y-%m-%d')
-                        formatted_date = date_obj.strftime('%d.%m')
-                        st.write(f"📅 {formatted_date} {match['time']}")
-                    
-                    with cols[5]:
-                        st.write(f"Группа {match['group']}")
-                    
-                    st.markdown("---")
+                    # Внешний контейнер с фоном
+                    st.markdown(f"""
+                    <div style="
+                        background-color: {bg_color};
+                        border-left: 5px solid {border_color};
+                        border-radius: 10px;
+                        padding: 15px;
+                        margin-bottom: 12px;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    ">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #666; font-size: 14px;">
+                            <span>⏱️ {match['time']}</span>
+                            <span>📅 {formatted_date}</span>
+                            <span>Группа {match['group']}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+                            <div style="flex: 2; text-align: right; font-weight: bold; font-size: 16px; padding-right: 15px;">
+                                {match['team1']}
+                            </div>
+                            <div style="flex: 1; text-align: center; background-color: white; padding: 8px 0; border-radius: 25px; font-weight: bold; font-size: 20px;">
+                                {score_display}
+                            </div>
+                            <div style="flex: 2; text-align: left; font-weight: bold; font-size: 16px; padding-left: 15px;">
+                                {match['team2']}
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 10px;">
+                            <span style="background-color: {status_bg}; color: white; padding: 5px 20px; border-radius: 20px; font-size: 14px;">
+                                {status_text}
+                            </span>
+                        </div>
+                        <div style="text-align: center; margin-top: 8px; color: #666; font-size: 12px;">
+                            ⚽ Тур {match['tour']}
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
         else:
             st.info("Нет матчей, соответствующих выбранным фильтрам")
-    
-    # Вкладка 3: Администрирование
-    with tab3:
-        st.header("🔧 Администрирование турнира")
-        
-        if check_password():
-            st.success("✅ Доступ разрешен")
-            
-            # Создаем две колонки для выбора действия
-            action = st.radio(
-                "Выберите действие:",
-                ["📝 Ввод результатов", "🔄 Сброс результатов"],
-                horizontal=True
-            )
-            
-            if action == "📝 Ввод результатов":
-                st.subheader("Ввод результатов матчей")
-                
-                # Показываем все матчи, сортируем по дате
-                all_matches = sorted(data['matches'], key=lambda x: (x['date'], x['time']))
-                
-                # Создаем список для выбора
-                match_options = {}
-                for match in all_matches:
-                    date_obj = datetime.strptime(match['date'], '%Y-%m-%d')
-                    formatted_date = date_obj.strftime('%d.%m.%Y')
-                    status = "✅" if match['status'] == 'completed' else "⏳"
-                    key = f"{status} {match['tour']} тур: {match['team1']} - {match['team2']} ({formatted_date} {match['time']})"
-                    match_options[key] = match
-                
-                selected_match_key = st.selectbox(
-                    "Выберите матч:",
-                    options=list(match_options.keys()),
-                    key="input_match"
-                )
-                
-                match = match_options[selected_match_key]
-                
-                # Форма для ввода результата
-                with st.form(key="score_form"):
-                    st.write(f"**{match['team1']}** vs **{match['team2']}**")
-                    
-                    col1, col2, col3 = st.columns([1, 1, 1])
-                    
-                    with col1:
-                        score1 = st.number_input(
-                            match['team1'], 
-                            min_value=0, 
-                            max_value=50, 
-                            value=match['score1'] if match['score1'] is not None else 0,
-                            step=1
-                        )
-                    
-                    with col2:
-                        st.markdown("<h3 style='text-align: center; padding-top: 30px;'>:</h3>", 
-                                  unsafe_allow_html=True)
-                    
-                    with col3:
-                        score2 = st.number_input(
-                            match['team2'], 
-                            min_value=0, 
-                            max_value=50, 
-                            value=match['score2'] if match['score2'] is not None else 0,
-                            step=1
-                        )
-                    
-                    submitted = st.form_submit_button("💾 Сохранить результат", use_container_width=True)
-                    
-                    if submitted:
-                        for m in data['matches']:
-                            if m['id'] == match['id']:
-                                m['score1'] = score1
-                                m['score2'] = score2
-                                m['status'] = 'completed'
-                                break
-                        
-                        if save_tournament_data(data):
-                            st.success("✅ Результат сохранен!")
-                            st.rerun()
-            
-            else:  # Сброс результатов
-                st.subheader("🔄 Сброс результатов")
-                st.warning("⚠️ Здесь вы можете отменить результат сыгранного матча")
-                
-                # Показываем только сыгранные матчи
-                completed_matches = [m for m in data['matches'] if m['status'] == 'completed']
-                
-                if completed_matches:
-                    st.write(f"**Найдено сыгранных матчей:** {len(completed_matches)}")
-                    
-                    for match in completed_matches:
-                        col1, col2 = st.columns([3, 1])
-                        with col1:
-                            st.write(f"**{match['tour']} тур:** {match['team1']} {match['score1']}:{match['score2']} {match['team2']}")
-                        with col2:
-                            if st.button(f"🔄 Сбросить", key=f"reset_{match['id']}"):
-                                for m in data['matches']:
-                                    if m['id'] == match['id']:
-                                        m['score1'] = None
-                                        m['score2'] = None
-                                        m['status'] = 'scheduled'
-                                        break
-                                if save_tournament_data(data):
-                                    st.success("🔄 Результат сброшен!")
-                                    st.rerun()
-                        st.divider()
-                else:
-                    st.info("📭 Нет сыгранных матчей для сброса")
-        else:
-            st.info("🔒 Введите пароль для доступа к администрированию")
     
     # Статистика в сайдбаре
     with st.sidebar:
@@ -434,7 +575,14 @@ if data:
             st.subheader("Последние результаты")
             last_matches = sorted(completed_matches, key=lambda x: x['date'], reverse=True)[:3]
             for match in last_matches:
-                st.write(f"{match['team1']} {match['score1']}:{match['score2']} {match['team2']}")
+                date_obj = datetime.strptime(match['date'], '%Y-%m-%d')
+                formatted_date = date_obj.strftime('%d.%m')
+                st.write(f"📅 {formatted_date}: {match['team1']} {match['score1']}:{match['score2']} {match['team2']}")
+        
+        st.divider()
+        st.caption("📝 Для изменения результатов редактируйте файл:")
+        st.code("data/tournament.json", language="bash")
+        st.caption("🔄 Изменения появятся через 1 минуту")
 
 else:
     st.error("Не удалось загрузить данные турнира. Проверьте файл data/tournament.json")
