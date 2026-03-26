@@ -578,11 +578,6 @@ if data:
                 date_obj = datetime.strptime(match['date'], '%Y-%m-%d')
                 formatted_date = date_obj.strftime('%d.%m')
                 st.write(f"📅 {formatted_date}: {match['team1']} {match['score1']}:{match['score2']} {match['team2']}")
-        
-        st.divider()
-        st.caption("📝 Для изменения результатов редактируйте файл:")
-        st.code("data/tournament.json", language="bash")
-        st.caption("🔄 Изменения появятся через 1 минуту")
 
 else:
     st.error("Не удалось загрузить данные турнира. Проверьте файл data/tournament.json")
