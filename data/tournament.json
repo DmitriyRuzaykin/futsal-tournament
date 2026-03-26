@@ -66,9 +66,9 @@
       "time": "16:00",
       "team1": "Часовенная",
       "team2": "Петъял",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 5,
+      "score2": 8,
+      "status": "completed"
     },
     {
       "id": 6,
@@ -78,9 +78,9 @@
       "time": "17:00",
       "team1": "Сотнур",
       "team2": "Параты",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 2,
+      "score2": 8,
+      "status": "completed"
     },
     {
       "id": 7,
@@ -90,9 +90,9 @@
       "time": "18:00",
       "team1": "Помары",
       "team2": "Карамассы",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 6,
+      "score2": 7,
+      "status": "completed"
     },
     {
       "id": 8,
@@ -102,9 +102,9 @@
       "time": "19:00",
       "team1": "Приволжский 1",
       "team2": "Ярамор",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 2,
+      "score2": 4,
+      "status": "completed"
     },
     {
       "id": 9,
@@ -114,9 +114,9 @@
       "time": "16:00",
       "team1": "Параты",
       "team2": "Приволжский 1",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 3,
+      "score2": 4,
+      "status": "completed"
     },
     {
       "id": 10,
@@ -126,9 +126,9 @@
       "time": "17:00",
       "team1": "Петъял",
       "team2": "Помары",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 2,
+      "score2": 3,
+      "status": "completed"
     },
     {
       "id": 11,
@@ -138,9 +138,9 @@
       "time": "18:00",
       "team1": "Приволжский 2",
       "team2": "Сотнур",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 6,
+      "score2": 3,
+      "status": "completed"
     },
     {
       "id": 12,
@@ -150,9 +150,9 @@
       "time": "19:00",
       "team1": "Эмеково",
       "team2": "Часовенная",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 1,
+      "score2": 2,
+      "status": "completed"
     },
     {
       "id": 13,
@@ -162,9 +162,9 @@
       "time": "16:00",
       "team1": "Помары",
       "team2": "Эмеково",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 8,
+      "score2": 1,
+      "status": "completed"
     },
     {
       "id": 14,
@@ -174,9 +174,9 @@
       "time": "17:00",
       "team1": "Приволжский 1",
       "team2": "Приволжский 2",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 7,
+      "score2": 0,
+      "status": "completed"
     },
     {
       "id": 15,
@@ -186,9 +186,9 @@
       "time": "18:00",
       "team1": "Карамассы",
       "team2": "Петъял",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 2,
+      "score2": 7,
+      "status": "completed"
     },
     {
       "id": 16,
@@ -198,9 +198,9 @@
       "time": "19:00",
       "team1": "Ярамор",
       "team2": "Параты",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 8,
+      "score2": 2,
+      "status": "completed"
     },
     {
       "id": 17,
