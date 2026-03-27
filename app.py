@@ -469,16 +469,34 @@ def calculate_standings(matches, group_teams):
     
     return df
 
+# Функция для загрузки названий команд по их позициям
+def get_team_by_position(groups, group_letter, position):
+    """Возвращает название команды по группе и позиции (1-5)"""
+    # Сначала нужно получить актуальную турнирную таблицу для группы
+    if group_letter == "A":
+        group_teams = groups['A']
+        group_matches = [m for m in data['matches'] if m['group'] == 'A']
+        df = calculate_standings(group_matches, group_teams)
+    else:
+        group_teams = groups['B']
+        group_matches = [m for m in data['matches'] if m['group'] == 'B']
+        df = calculate_standings(group_matches, group_teams)
+    
+    if not df.empty and len(df) >= position:
+        return df.iloc[position - 1]['Команда']
+    return f"{group_letter}{position}"
+
 # Загружаем данные
 data = load_tournament_data()
 
 if data:
     # Создаем вкладки
-    tab1, tab2 = st.tabs([
-        "📊 Турнирная таблица", 
-        "⚔️ Матчи"
-    ])
-    
+    tab1, tab2, tab3 = st.tabs([
+    "📊 Турнирная таблица", 
+    "⚔️ Матчи группового этапа",
+    "🏆 Стыковые матчи"
+])
+
     # Вкладка 1: Турнирная таблица
     with tab1:
         st.header("Турнирная таблица - Групповой этап")
@@ -516,7 +534,7 @@ if data:
     
     # Вкладка 2: Матчи (исправленная версия)
     with tab2:
-        st.header("Расписание матчей - Групповой этап")
+        st.header("Расписание матчей")
         
         # Фильтры
         col1, col2, col3 = st.columns(3)
@@ -627,6 +645,72 @@ if data:
                     """, unsafe_allow_html=True)
         else:
             st.info("Нет матчей, соответствующих выбранным фильтрам")
+    
+    # Вкладка 3: Стыковые матчи
+    with tab3:
+        st.header("🏆 Стыковые матчи")
+        st.markdown("Игры на вылет")
+        
+        # Проверяем наличие стыковых матчей в данных
+        if 'playoff_matches' in data and data['playoff_matches']:
+            for match in data['playoff_matches']:
+                # Определяем цвета в зависимости от статуса
+                if match['status'] == 'completed':
+                    bg_color = "#e8f5e9"
+                    border_color = "#2e7d32"
+                    status_text = "✅ Завершен"
+                    status_bg = "#2e7d32"
+                else:
+                    bg_color = "#fff3e0"
+                    border_color = "#ed6c02"
+                    status_text = "⏳ Предстоит"
+                    status_bg = "#ed6c02"
+                
+                # Форматируем дату
+                date_obj = datetime.strptime(match['date'], '%Y-%m-%d')
+                formatted_date = date_obj.strftime('%d.%m.%Y')
+                
+                # Отображаем счет
+                if match['score1'] is not None and match['score2'] is not None:
+                    score_display = f"{match['score1']} : {match['score2']}"
+                else:
+                    score_display = "? : ?"
+                
+                # Создаем карточку матча
+                st.markdown(f"""
+                <div style="
+                    background-color: {bg_color};
+                    border-left: 5px solid {border_color};
+                    border-radius: 10px;
+                    padding: 15px;
+                    margin-bottom: 12px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                ">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #666; font-size: 14px;">
+                        <span>⏱️ {match['time']}</span>
+                        <span>📅 {formatted_date}</span>
+                        <span>{match.get('description', 'Стыковой матч')}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+                        <div style="flex: 2; text-align: right; font-weight: bold; font-size: 16px; padding-right: 15px;">
+                            {match['team1']}
+                        </div>
+                        <div style="flex: 1; text-align: center; background-color: white; padding: 8px 0; border-radius: 25px; font-weight: bold; font-size: 20px;">
+                            {score_display}
+                        </div>
+                        <div style="flex: 2; text-align: left; font-weight: bold; font-size: 16px; padding-left: 15px;">
+                            {match['team2']}
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <span style="background-color: {status_bg}; color: white; padding: 5px 20px; border-radius: 20px; font-size: 14px;">
+                            {status_text}
+                        </span>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info("Информация о стыковых матчах появится позже")
     
     # Статистика в сайдбаре
     with st.sidebar:
