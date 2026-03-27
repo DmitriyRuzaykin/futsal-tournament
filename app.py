@@ -716,27 +716,62 @@ if data:
     with st.sidebar:
         st.header("📊 Статистика турнира")
         
-        completed_matches = [m for m in data['matches'] if m['status'] == 'completed']
-        scheduled_matches = [m for m in data['matches'] if m['status'] == 'scheduled']
+        # Собираем все матчи
+        all_matches = data['matches'].copy()
+        if 'playoff_matches' in data:
+            all_matches.extend(data['playoff_matches'])
+        
+        completed_matches = [m for m in all_matches if m['status'] == 'completed']
+        scheduled_matches = [m for m in all_matches if m['status'] == 'scheduled']
         
         total_goals = 0
         for m in completed_matches:
             if m['score1'] is not None and m['score2'] is not None:
                 total_goals += m['score1'] + m['score2']
         
-        st.metric("Всего матчей", len(data['matches']))
-        st.metric("Сыграно матчей", len(completed_matches))
-        st.metric("Осталось матчей", len(scheduled_matches))
-        st.metric("Всего голов", total_goals)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Всего матчей", len(all_matches))
+            st.metric("Сыграно", len(completed_matches))
+        with col2:
+            st.metric("Осталось", len(scheduled_matches))
+            st.metric("Всего голов", total_goals)
+        
+        # Статистика по типам матчей
+        st.divider()
+        st.subheader("📈 По этапам")
+        
+        group_matches = [m for m in data['matches'] if m['status'] == 'completed']
+        group_goals = sum(m['score1'] + m['score2'] for m in group_matches if m['score1'] is not None)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Групповой этап", f"{len(group_matches)} матчей")
+            st.metric("Голов", group_goals)
+        
+        if 'playoff_matches' in data:
+            playoff_matches = [m for m in data['playoff_matches'] if m['status'] == 'completed']
+            playoff_goals = sum(m['score1'] + m['score2'] for m in playoff_matches if m['score1'] is not None)
+            
+            with col2:
+                st.metric("Стыковые матчи", f"{len(playoff_matches)} матчей")
+                st.metric("Голов", playoff_goals)
         
         if completed_matches:
             st.divider()
-            st.subheader("Последние результаты")
+            st.subheader("📋 Последние результаты")
             last_matches = sorted(completed_matches, key=lambda x: x['date'], reverse=True)[:3]
             for match in last_matches:
                 date_obj = datetime.strptime(match['date'], '%Y-%m-%d')
                 formatted_date = date_obj.strftime('%d.%m')
-                st.write(f"📅 {formatted_date}: {match['team1']} {match['score1']}:{match['score2']} {match['team2']}")
+                
+                # Эмодзи для типа матча
+                if match.get('stage') == 'playoff':
+                    match_icon = "🏆"
+                else:
+                    match_icon = "⚽"
+                
+                st.write(f"{match_icon} {formatted_date}: {match['team1']} {match['score1']}:{match['score2']} {match['team2']}")
 
 else:
     st.error("Не удалось загрузить данные турнира. Проверьте файл data/tournament.json")
