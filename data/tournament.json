@@ -210,9 +210,9 @@
       "time": "16:00",
       "team1": "Приволжский 2",
       "team2": "Ярамор",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 3,
+      "score2": 7,
+      "status": "completed"
     },
     {
       "id": 18,
@@ -222,9 +222,9 @@
       "time": "17:00",
       "team1": "Эмеково",
       "team2": "Карамассы",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 1,
+      "score2": 0,
+      "status": "completed"
     },
     {
       "id": 19,
@@ -234,9 +234,9 @@
       "time": "18:00",
       "team1": "Сотнур",
       "team2": "Приволжский 1",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 2,
+      "score2": 10,
+      "status": "completed"
     },
     {
       "id": 20,
@@ -246,9 +246,9 @@
       "time": "19:00",
       "team1": "Часовенная",
       "team2": "Помары",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled"
+      "score1": 5,
+      "score2": 4,
+      "status": "completed"
     }
   ],
     "playoff_matches": [
@@ -257,8 +257,8 @@
       "stage": "playoff",
       "date": "2026-03-29",
       "time": "19:00",
-      "team1": "A4",
-      "team2": "B5",
+      "team1": "Приволжский 2",
+      "team2": "Карамассы",
       "score1": null,
       "score2": null,
       "status": "scheduled",
@@ -269,8 +269,8 @@
       "stage": "playoff",
       "date": "2026-03-29",
       "time": "20:00",
-      "team1": "B4",
-      "team2": "A5",
+      "team1": "Эмеково",
+      "team2": "Сотнур",
       "score1": null,
       "score2": null,
       "status": "scheduled",
