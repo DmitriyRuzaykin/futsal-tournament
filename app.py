@@ -302,8 +302,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Заголовок
-st.title("🏆 Кубок Elita по футзалу")
-st.subheader("Волжский муниципальный район")
+st.title("🏆 Кубок Elita по футзалу 2026")
+st.subheader("Волжский муниципальный округ")
 st.markdown("---")
 
 # Функция загрузки данных из локального JSON файла
@@ -488,13 +488,13 @@ def get_team_by_position(groups, group_letter, position):
 
 # Загружаем данные
 data = load_tournament_data()
-
+  
 if data:
     # Создаем вкладки
     tab1, tab2, tab3 = st.tabs([
     "📊 Турнирная таблица", 
     "⚔️ Матчи группового этапа",
-    "🏆 Стыковые матчи"
+    "🏆 Плей-офф"
 ])
 
     # Вкладка 1: Турнирная таблица
@@ -532,7 +532,7 @@ if data:
         else:
             st.info("Нет данных для отображения")
     
-    # Вкладка 2: Матчи (исправленная версия)
+    # Вкладка 2: Матчи
     with tab2:
         st.header("Расписание матчей")
         
@@ -648,8 +648,8 @@ if data:
     
     # Вкладка 3: Стыковые матчи
     with tab3:
-        st.header("🏆 Стыковые матчи")
-        st.markdown("Игры на вылет")
+        st.header("🏆 Плей-офф")
+        # st.markdown("Игры на вылет")
         
         # Проверяем наличие стыковых матчей в данных
         if 'playoff_matches' in data and data['playoff_matches']:
