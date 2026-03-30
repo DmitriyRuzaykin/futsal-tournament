@@ -259,9 +259,9 @@
       "time": "19:00",
       "team1": "Приволжский 2",
       "team2": "Карамассы",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled",
+      "score1": 5,
+      "score2": 1,
+      "status": "completed",
       "description": "Стыковой матч"
     },
     {
@@ -271,9 +271,9 @@
       "time": "20:00",
       "team1": "Эмеково",
       "team2": "Сотнур",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled",
+      "score1": 5,
+      "score2": 3,
+      "status": "completed",
       "description": "Стыковой матч"
     }
   ],
