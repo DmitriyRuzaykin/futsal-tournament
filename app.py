@@ -118,6 +118,54 @@ st.markdown("""
             font-size: 12px;
         }
     }
+    
+    /* Стили для рамки заголовка как на QA Compass */
+    .hero-frame {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 3px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .hero-content {
+        background: white;
+        border-radius: 18px;
+        padding: 30px 20px;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2.2rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    /* Адаптация для мобильных */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 1.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 0.85rem;
+        }
+        
+        .hero-content {
+            padding: 20px 15px;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -301,10 +349,19 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Заголовок
-st.title("🏆 Кубок Elita по футзалу 2026")
-st.subheader("Волжский муниципальный округ")
-st.markdown("---")
+# Красивая рамка с заголовком как на QA Compass
+st.markdown("""
+<div class="hero-frame">
+    <div class="hero-content">
+        <div class="hero-title">
+            🏆 Кубок Elita по футзалу 2026
+        </div>
+        <div class="hero-subtitle">
+            Волжский муниципальный округ
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # Функция загрузки данных из локального JSON файла
 @st.cache_data(ttl=60)  # Кэшируем на 1 минуту, чтобы видеть изменения быстрее
