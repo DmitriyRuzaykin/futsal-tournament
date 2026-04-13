@@ -331,9 +331,9 @@
       "time": "16:00",
       "team1": "Эмеково",
       "team2": "Параты",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled",
+      "score1": 3,
+      "score2": 5,
+      "status": "completed",
       "description": "Игра №5 раунд 2"
     },
     {
@@ -343,9 +343,9 @@
       "time": "17:00",
       "team1": "Приволжский 2",
       "team2": "Часовенная",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled",
+      "score1": 4,
+      "score2": 0,
+      "status": "completed",
       "description": "Игра №6 раунд 2"
     },
     {
@@ -355,9 +355,9 @@
       "time": "18:00",
       "team1": "Ярамор",
       "team2": "Петъял",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled",
+      "score1": 2,
+      "score2": 7,
+      "status": "completed",
       "description": "Игра №7 раунд 2"
     },
     {
@@ -367,9 +367,9 @@
       "time": "19:00",
       "team1": "Помары",
       "team2": "Приволжский 1",
-      "score1": null,
-      "score2": null,
-      "status": "scheduled",
+      "score1": 3,
+      "score2": 2,
+      "status": "completed",
       "description": "Игра №8 раунд 2"
     },
     {
